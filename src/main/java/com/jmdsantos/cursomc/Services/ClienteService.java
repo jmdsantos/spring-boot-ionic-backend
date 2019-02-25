@@ -12,16 +12,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jmdsantos.cursomc.Services.exceptions.AuthorizationException;
 import com.jmdsantos.cursomc.Services.exceptions.DataIntegrityException;
 import com.jmdsantos.cursomc.Services.exceptions.ObjectNotFoundException;
 import com.jmdsantos.cursomc.domain.Cidade;
 import com.jmdsantos.cursomc.domain.Cliente;
 import com.jmdsantos.cursomc.domain.Endereco;
+import com.jmdsantos.cursomc.domain.enums.Perfil;
 import com.jmdsantos.cursomc.domain.enums.TipoCliente;
 import com.jmdsantos.cursomc.dto.ClienteDTO;
 import com.jmdsantos.cursomc.dto.ClienteNewDTO;
 import com.jmdsantos.cursomc.repositories.ClienteRepository;
 import com.jmdsantos.cursomc.repositories.EnderecoRepository;
+import com.jmdsantos.cursomc.security.UserSS;
 
 @Service
 public class ClienteService {
@@ -36,6 +39,11 @@ public class ClienteService {
 	private BCryptPasswordEncoder pe;
 	
 	public Cliente find(Integer id) {
+		
+		UserSS user = (UserSS) UserService.authenticated();
+		if (user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId() ) ) {
+			throw new AuthorizationException("Acesso negado!");
+		}
 		
 		Optional<Cliente> obj = repo.findById(id);
 		
