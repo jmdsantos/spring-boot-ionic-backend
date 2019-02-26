@@ -1,0 +1,22 @@
+package com.jmdsantos.cursomc.Services;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.jmdsantos.cursomc.domain.Cidade;
+import com.jmdsantos.cursomc.repositories.CidadeRepository;
+
+@Service
+public class CidadeService {
+
+	@Autowired
+	private CidadeRepository repo;
+	
+	public List<Cidade> findByEstado(Integer estadoId) {
+		
+		return repo.findCidades(estadoId);
+	}
+	
+}
