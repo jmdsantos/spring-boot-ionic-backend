@@ -2,6 +2,7 @@ package com.jmdsantos.cursomc.Services.validation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -36,7 +37,8 @@ public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert
 			list.add(new FieldMessage("cpfOuCnpj", "CNPJ Inválido"));
 		}
 		
-		Cliente aux = repo.findByEmail(objDto.getEmail());
+		Optional<Cliente> obj = repo.findByEmail(objDto.getEmail());
+		Cliente aux = obj.get();
 		if (aux != null) {
 			list.add(new FieldMessage("email", "Email já existente"));
 		}
